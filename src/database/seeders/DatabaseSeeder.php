@@ -13,11 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Call seeders in correct order (considering foreign key dependencies)
+        $this->call([
+            // Base tables (no dependencies)
+            userSeeder::class,
+            customerSeeder::class,
+            itemSeeder::class,
+            transactionSeeder::class,
+            
+            // Tables with dependencies
+            orderSeeder::class,          // depends on customers & transactions
+            orderItemSeeder::class,      // depends on orders & items
+            paymentSeeder::class,        // depends on transactions
+            invoiceSeeder::class,        // depends on transactions
+            ledgerEntriesSeeder::class,  // depends on transactions
+            addressesSeeder::class,      // depends on customers
         ]);
     }
 }
